@@ -4,16 +4,12 @@ import java.util.Date;
 
 //区域类
 public class Area {
-    //ID
-    private Integer areaId;
-    //名称
-    private String areaName;
-    //权重
-    private Integer priority;
-    //创建时间
-    private Date createTime;
-    //更新时间
-    private Date lastTime;
+
+    private Integer areaId; //ID
+    private String areaName; //名称
+    private Integer priority; //权重
+    private Date createTime;  //创建时间
+    private Date lastTime; //更新时间
 
     public Integer getAreaId() {
         return areaId;

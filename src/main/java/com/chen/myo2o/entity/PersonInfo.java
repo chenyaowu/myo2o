@@ -11,8 +11,7 @@ public class PersonInfo {
     private String email;
     private String gender;
     private Integer enableStatus;
-    // 1.顾客 2.店家 3.超级管理员
-    private Integer userType;
+    private Integer userType; // 1.顾客 2.店家 3.超级管理员
     private Date createTime;
     private Date lastEditTime;
 
