@@ -27,7 +27,7 @@ CREATE TABLE `tb_person_info` (
 	`create_time` datetime DEFAULT NULL,
 	`last_edit_time` datetime DEFAULT NULL,
 	PRIMARY KEY (`user_id`)
-) ENGINE = INNODB AUTO_INCREMENT = 1 DEFAULT CHARSET = UTF8
+) ENGINE = INNODB AUTO_INCREMENT = 1 DEFAULT CHARSET = UTF8;
 
 #创建微信账号表
 CREATE TABLE `tb_wechat_auth`(
@@ -64,7 +64,7 @@ enable_status int(2) NOT NULL DEFAULT 0,
 create_time datetime DEFAULT NULL,
 last_edit_time datetime DEFAULT NULL,
 PRIMARY KEY (line_id)
-)ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET = utf8
+)ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET = utf8;
 
 #创建店铺类别
 create TABLE tb_shop_category(
@@ -78,7 +78,7 @@ create TABLE tb_shop_category(
 	parent_id int(11) DEFAULT NULL,
 	PRIMARY KEY (shop_category_id),
 	CONSTRAINT fk_shop_category_self FOREIGN KEY (parent_id) REFERENCES tb_shop_category(shop_category_id)
-)ENGINE=INNODB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8
+)ENGINE=INNODB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8;
 
 #创建店铺表
 CREATE TABLE tb_shop(
@@ -100,7 +100,7 @@ CREATE TABLE tb_shop(
 	CONSTRAINT fk_shop_area FOREIGN KEY (area_id) REFERENCES tb_area (area_id),
 	CONSTRAINT fk_shop_profile FOREIGN KEY (owner_id) REFERENCES tb_person_info (user_id),
 	CONSTRAINT fk_shop_shopcate FOREIGN KEY (shop_category_id) REFERENCES tb_shop_category(shop_category_id)
-)ENGINE=InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8
+)ENGINE=InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8;
 
 #创建商品类别表
 create TABLE tb_product_category(
@@ -112,18 +112,6 @@ create TABLE tb_product_category(
 	PRIMARY KEY (product_category_id),
 	CONSTRAINT fk_procate_shop FOREIGN KEY (shop_id) REFERENCES tb_shop (shop_id)
 )ENGINE = INNODB AUTO_INCREMENT =1 DEFAULT CHARSET = utf8;
-
-#创建商品详情图片表
-create TABLE tb_product_img(
-	product_img_id int(20) NOT NULL AUTO_INCREMENT,
-	img_addr varchar(2000) NOT NULL,
-	img_desc varchar(2000) DEFAULT NULL,
-	priority int(2) DEFAULT 0 ,
-	create_time datetime DEFAULT NULL,
-	product_id int(20) DEFAULT NULL,
-	PRIMARY KEY (product_img_id),
-	CONSTRAINT fk_proimg_product FOREIGN KEY (product_img_id) REFERENCES tb_product(product_id)
-)ENGINE=InnoDB AUTO_INCREMENT =1 DEFAULT CHARSET = utf8
 
 #创建商品表
 CREATE TABLE tb_product(
@@ -141,4 +129,18 @@ CREATE TABLE tb_product(
 	PRIMARY KEY (product_id),
 	CONSTRAINT fk_product_procate FOREIGN KEY (product_category_id) REFERENCES tb_product_category (product_category_id),
 	CONSTRAINT fk_product_shop FOREIGN KEY (shop_id) REFERENCES tb_shop (shop_id)
-)ENGINE=INNODB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8
+)ENGINE=INNODB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8;
+
+#创建商品详情图片表
+create TABLE tb_product_img(
+	product_img_id int(20) NOT NULL AUTO_INCREMENT,
+	img_addr varchar(2000) NOT NULL,
+	img_desc varchar(2000) DEFAULT NULL,
+	priority int(2) DEFAULT 0 ,
+	create_time datetime DEFAULT NULL,
+	product_id int(20) DEFAULT NULL,
+	PRIMARY KEY (product_img_id),
+	CONSTRAINT fk_proimg_product FOREIGN KEY (product_img_id) REFERENCES tb_product(product_id)
+)ENGINE=InnoDB AUTO_INCREMENT =1 DEFAULT CHARSET = utf8;
+
+

@@ -17,6 +17,7 @@
        （1）加入允许静态资源的处理:js,gif,png
         (2)允许使用"/"做整体映射
     -->
+
     <mvc:resources mapping="/resources/**" location="/resources/"/>
     <mvc:default-servlet-handler/>
  <!--定义视图解析器-->
