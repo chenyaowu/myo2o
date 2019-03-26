@@ -1,18 +1,23 @@
 package com.chen.myo2o.web.shopadmin;
 
 import com.chen.myo2o.dto.ShopExecution;
+import com.chen.myo2o.entity.Area;
 import com.chen.myo2o.entity.PersonInfo;
 import com.chen.myo2o.entity.Shop;
+import com.chen.myo2o.entity.ShopCategory;
 import com.chen.myo2o.enums.ShopStateEnum;
+import com.chen.myo2o.exception.ShopOperationException;
+import com.chen.myo2o.service.AreaService;
+import com.chen.myo2o.service.ShopCategoryService;
 import com.chen.myo2o.service.ShopService;
+import com.chen.myo2o.util.CodeUtil;
 import com.chen.myo2o.util.HttpServletRequestUtil;
-import com.chen.myo2o.util.ImageUtil;
-import com.chen.myo2o.util.PathUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
@@ -29,14 +34,46 @@ import java.util.Map;
 public class ShopManagementController {
     @Autowired
     private ShopService shopService;
+    @Autowired
+    private ShopCategoryService shopCategoryService;
+    @Autowired
+    private AreaService areaService;
+
+    @RequestMapping(value = "/getshopinitinfo", method = RequestMethod.GET)
+    @ResponseBody
+    private Map<String, Object> getShopInitInfo() {
+        Map<String, Object> modelMap = new HashMap<String, Object>();
+        List<ShopCategory> shopCategoryList = new ArrayList<ShopCategory>();
+        List<Area> areaList = new ArrayList<Area>();
+
+        try {
+            shopCategoryList = shopCategoryService.getShopCategoryList(new ShopCategory());
+            areaList = areaService.getAreaList();
+            modelMap.put("shopCategoryList", shopCategoryList);
+            modelMap.put("areaList", areaList);
+            modelMap.put("success", true);
+        } catch (Exception e) {
+            modelMap.put("success", false);
+            modelMap.put("errMsg", e.getMessage());
+
+        }
+        return modelMap;
+
+    }
 
     @RequestMapping(value = "/registershop", method = RequestMethod.POST)
+    @ResponseBody
     private Map<String, Object> registerShop(HttpServletRequest request) {
         Map<String, Object> modelMap = new HashMap<String, Object>();
+        if (!CodeUtil.checkVerifyCode(request)) {
+            modelMap.put("success", false);
+            modelMap.put("errMsg", "验证码错误");
+            return modelMap;
+        }
         //1.接收并转化相应的参数，包括店铺信息和图片信息
         String shopStr = HttpServletRequestUtil.getString(request, "shopStr");
         ObjectMapper mapper = new ObjectMapper();
-        Shop shop = new Shop();
+        Shop shop;
         try {
             shop = mapper.readValue(shopStr, Shop.class);
         } catch (Exception e) {
@@ -44,7 +81,7 @@ public class ShopManagementController {
             modelMap.put("errMsg", e.getMessage());
             return modelMap;
         }
-        CommonsMultipartFile shopImg = null;
+        CommonsMultipartFile shopImg;
         CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver(request.getSession().getServletContext());
         if (commonsMultipartResolver.isMultipart(request)) {
             MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) request;
@@ -56,37 +93,25 @@ public class ShopManagementController {
         }
         //2.注册店铺
         if (shop != null && shopImg != null) {
-            PersonInfo owner = (PersonInfo) request.getSession().getAttribute("user");
+            PersonInfo owner = new PersonInfo();
+            //Session TODO
+            owner.setUserId(1L);
             shop.setOwner(owner);
-            ShopExecution shopExecution = null;
-            File shopImage = new File(PathUtil.getImgBasePath() + ImageUtil.getRandomFileName());
+            ShopExecution se;
             try {
-                inputStreamToFile(shopImg.getInputStream(), shopImage);
+                se = shopService.addShop(shop, shopImg.getInputStream(), shopImg.getOriginalFilename());
+                if (se.getState() == ShopStateEnum.CHECK.getState()) {
+                    modelMap.put("success", true);
+                } else {
+                    modelMap.put("success", false);
+                    modelMap.put("errMsg", se.getStateInfo());
+                }
+            } catch (ShopOperationException e) {
+                modelMap.put("success", false);
+                modelMap.put("errMsg", e.getMessage());
             } catch (IOException e) {
                 modelMap.put("success", false);
                 modelMap.put("errMsg", e.getMessage());
-                return modelMap;
-            }
-            try {
-                shopExecution = shopService.addShop(shop, shopImage);
-            } catch (Exception e) {
-                modelMap.put("success", false);
-                modelMap.put("errMsg", e.getMessage());
-                return modelMap;
-            }
-            if (shopExecution.getState() == ShopStateEnum.CHECK.getState()) {
-                modelMap.put("success", true);
-                //该用户可以操作的店铺列表
-                List<Shop> shopList = (List<Shop>) request.getSession().getAttribute("shopList");
-                if (shopList == null || shopList.size() == 0) {
-                    shopList = new ArrayList<Shop>();
-                }
-                shopList.add(shopExecution.getShop());
-                request.getSession().setAttribute("shopList", shopList);
-            } else {
-                modelMap.put("success", false);
-                modelMap.put("errMsg", shopExecution.getStateInfo());
-                return modelMap;
             }
             return modelMap;
         } else {
@@ -97,29 +122,28 @@ public class ShopManagementController {
 
     }
 
-    private static void inputStreamToFile(InputStream ins, File file) {
-        OutputStream os = null;
-        try {
-            os = new FileOutputStream(file);
-            int bytesRead = 0;
-            byte[] buffer = new byte[1024];
-            while ((bytesRead = ins.read(buffer)) != -1) {
-                os.write(buffer, 0, bytesRead);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("调用inputStreamToFile异常" + e.getMessage());
-        } finally {
-
-            try {
-                if (os != null) {
-                    os.close();
-                }
-                if (ins != null) {
-                    os.close();
-                }
-            } catch (IOException e) {
-                throw new RuntimeException("inputStreamToFile关闭io产生异常" + e.getMessage());
-            }
-        }
-    }
+//    private static void inputStreamToFile(InputStream ins, File file) {
+//        OutputStream os = null;
+//        try {
+//            os = new FileOutputStream(file);
+//            int bytesRead = 0;
+//            byte[] buffer = new byte[1024];
+//            while ((bytesRead = ins.read(buffer)) != -1) {
+//                os.write(buffer, 0, bytesRead);
+//            }
+//        } catch (Exception e) {
+//            throw new RuntimeException("调用inputStreamToFile异常" + e.getMessage());
+//        } finally {
+//            try {
+//                if (os != null) {
+//                    os.close();
+//                }
+//                if (ins != null) {
+//                    os.close();
+//                }
+//            } catch (IOException e) {
+//                throw new RuntimeException("inputStreamToFile关闭io产生异常" + e.getMessage());
+//            }
+//        }
+//    }
 }

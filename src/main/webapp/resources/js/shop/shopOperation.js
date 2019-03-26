@@ -35,17 +35,17 @@ $(function () {
         });
     }
     function getShopInitInfo() {
-        $.getJSON(initUrl,function (date) {
+        $.getJSON(initUrl, function (date) {
             if(date.success){
                 var tempHtml = '';
                 var tempAreaHtml = '';
-                date.shopCategoryList.map(function (item,index) {
-                    tempHtml +='<option data-id="'+item.shopCategoryId+'">'
-                        +item.shopCategoryName+'</option>';
+                date.shopCategoryList.map(function (item, index) {
+                    tempHtml +='<option data-id="' + item.shopCategoryId + '">'
+                        + item.shopCategoryName + '</option>';
                 });
-                date.areaList.map(function (item,index) {
-                    tempAreaHtml +='<option data-id="'+item.areaId+'">'
-                    +item.areaName+'</option>';
+                date.areaList.map(function (item, index) {
+                    tempAreaHtml += '<option data-id="' + item.areaId + '">'
+                    + item.areaName + '</option>';
                 });
                 $('#shop-category').html(tempHtml);
                 $('#area').html(tempAreaHtml);
@@ -54,20 +54,17 @@ $(function () {
        }
     $('#submit').click(function () {
         var shop ={};
-        if(isEdit){
-            shop.shopId = shopId;
-        }
         shop.shopName = $('#shop-name').val();
         shop.shopAddr = $('#shop-addr').val();
         shop.phone = $('#shop-phone').val();
         shop.shopDesc = $('#shop-desc').val();
         shop.shopCategory = {
-            shopCategoryId : $('#shop-category').find('option').not(function () {
+            shopCategoryId: $('#shop-category').find('option').not(function () {
                 return !this.selected;
             }).data('id')
         };
         shop.area = {
-            areaId : $('#area').find('option').not(function () {
+            areaId: $('#area').find('option').not(function () {
                 return !this.selected;
             }).data('id')
         };
@@ -80,19 +77,19 @@ $(function () {
             $.toast('请输入验证码!');
             return;
         }
-        formData.append('verifyCodeActual',verifyCodeActual);
+        formData.append('verifyCodeActual', verifyCodeActual);
         $.ajax({
-            url :isEdit?editShopUrl:registerShopUrl,
-            type : 'POST',
-            data : formData,
-            contentType : false,
-            processData : false,
-            cache : false,
-            success:function (data) {
+            url: registerShopUrl,
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            cache: false,
+            success: function (data) {
                 if(data.success){
                     $.toast('提交成功!');
                 }else{
-                    $.toast('提交失败!'+data.errMsg);
+                    $.toast('提交失败!' + data.errMsg);
                 }
                 $('#captcha_img').click();
             }
