@@ -25,7 +25,7 @@
 
 - 主从同步如何工作
 
-  ![MySQL-Master-Slave](https://github.com/chenyaowu/myo2o/tree/master/myo2o/img/mysql/MySQL-Master-Slave.jpg)
+  ![MySQL-Master-Slave](https://github.com/chenyaowu/myo2o/blob/master/myo2o/img/mysql/MySQL-Master-Slave.jpg)
 
   1. 主服务器(Master)将对数据的操作记录到二进制文件(Binary log)中，Master通知存储引擎提交事务。
   2. 从服务器(Slave)将Binary log拷贝到从服务器中继日志(Relay log)当中。(Slave开启I/O thread读取Binary log写入到Relay log)
