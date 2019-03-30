@@ -18,3 +18,18 @@
 ## MySQL存储引擎MyISAM与InnoDB区别
 - MyISAM存储引擎的特点是：表级锁、不支持事务和全文索引，适合一些CMS内容管理系统作为后台数据库使用，但是使用大并发、重负荷生产系统上，表锁结构的特性就显得力不从心
 - nnoDB存储引擎的特点是：行级锁、事务安全（ACID兼容）、支持外键、不支持FULLTEXT类型的索引。InnoDB存储引擎提供了具有提交、回滚和崩溃恢复能力的事务安全存储引擎。InnoDB是为处理巨大量时拥有最大性能而设计的。它的CPU效率可能是任何其他基于磁盘的关系数据库引擎所不能匹敌的。
+
+
+
+## Mysql主从分离
+
+- 主从同步如何工作
+
+  ![MySQL-Master-Slave](https://github.com/chenyaowu/myo2o/tree/master/myo2o/img/mysql/MySQL-Master-Slave.jpg)
+
+  1. 主服务器(Master)将对数据的操作记录到二进制文件(Binary log)中，Master通知存储引擎提交事务。
+  2. 从服务器(Slave)将Binary log拷贝到从服务器中继日志(Relay log)当中。(Slave开启I/O thread读取Binary log写入到Relay log)
+  3. SQL thrad读取Relay log，写入Slave数据库
+
+
+

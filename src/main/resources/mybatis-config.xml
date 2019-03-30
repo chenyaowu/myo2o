@@ -13,4 +13,9 @@
         <!--开启驼峰命名转换Table{creat_time}->Entiry{createTime} -->
         <setting name="mapUnderscoreToCamelCase" value="true"/>
     </settings>
+    <!--主从配置
+   <plugins>
+       <plugin interceptor="com.chen.myo2o.dao.split.DynamicDataSourceInteceptor"></plugin>
+   </plugins>
+-->
 </configuration>
