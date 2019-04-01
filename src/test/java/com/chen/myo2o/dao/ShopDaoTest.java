@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
+import java.util.List;
 
 public class ShopDaoTest extends BaseTest{
     @Autowired
@@ -62,5 +63,24 @@ public class ShopDaoTest extends BaseTest{
         shop.setLastEditTime(new Date());
         int effectedNum = shopDao.updateShop(shop);
         assertEquals(1,effectedNum);
+    }
+
+    @Test
+    public void testQueryByShopId(){
+        long shopId = 1;
+        Shop shop = shopDao.queryByShopId(shopId);
+        System.out.println(shop.getArea().getAreaId());
+    }
+
+    @Test
+    public void testQueryShopListAndCount(){
+        Shop shop = new Shop();
+        PersonInfo owner = new PersonInfo();
+        owner.setUserId(1l);
+        shop.setOwner(owner);
+        List<Shop> shopList= shopDao.queryShopList(shop,0,2);
+        int count  = shopDao.queryShopCount(shop);
+        System.out.println(shopList.size());
+        System.out.println(count);
     }
 }

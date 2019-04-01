@@ -1,17 +1,16 @@
 $(function () {
-    //var shopId = getQueryString("shopId");
-   // var isEdit = shopId?true:false;
+    var shopId = getQueryString("shopId");
+    var isEdit = shopId ? true : false;
     var initUrl = '/myo2o/shopadmin/getshopinitinfo';
     var registerShopUrl = '/myo2o/shopadmin/registershop';
-//    var shopInfoUrl = '/myo2o/shopadmin/getshopbyid?shopId='+shopId;
+    var shopInfoUrl = '/myo2o/shopadmin/getshopbyid?shopId='+shopId;
     var editShopUrl = '/myo2o/shopadmin/modifyshop'
-   // if(!isEdit){
+    if(!isEdit){
         getShopInitInfo();
-  //  }else{
-   //     getShopInfo(shopId);
-
-  //  }
-    function getShopInfo(shopId) {
+     }else{
+        getShopInfo();
+     }
+    function getShopInfo() {
         $.getJSON(shopInfoUrl,function (data) {
            if(data.success){
                var shop = data.shop;
@@ -54,6 +53,9 @@ $(function () {
        }
     $('#submit').click(function () {
         var shop ={};
+        if(isEdit){
+            shop.shopId = shopId;
+        }
         shop.shopName = $('#shop-name').val();
         shop.shopAddr = $('#shop-addr').val();
         shop.phone = $('#shop-phone').val();
@@ -79,7 +81,7 @@ $(function () {
         }
         formData.append('verifyCodeActual', verifyCodeActual);
         $.ajax({
-            url: registerShopUrl,
+            url: (isEdit ? editShopUrl : registerShopUrl),
             type: 'POST',
             data: formData,
             contentType: false,

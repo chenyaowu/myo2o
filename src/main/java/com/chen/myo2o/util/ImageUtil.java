@@ -57,4 +57,20 @@ public class ImageUtil {
 		String nowTimeStr = sdf.format(new Date());
 		return nowTimeStr + rannum;
 	}
+	/*
+  storePath 是文件的路径还是目录路径
+  如果是文件路径则删除文件
+  如果是目录则删除目录
+   */
+	public static void deleteFile(String storePath){
+		File fileOrPath = new File(PathUtil.getImgBasePath()+storePath);
+		if(fileOrPath.exists()) {
+			if (fileOrPath.isDirectory()) {
+				File[] files = fileOrPath.listFiles();
+				for (int i = 0; i < files.length; i++)
+					files[i].delete();
+			}
+			fileOrPath.delete();
+		}
+	}
 }
