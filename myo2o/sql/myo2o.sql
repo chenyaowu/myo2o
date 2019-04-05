@@ -20,6 +20,7 @@ CREATE TABLE `tb_person_info` (
 	`user_id` INT (10) NOT NULL AUTO_INCREMENT,
 	`NAME` VARCHAR (32) DEFAULT NULL,
 	`profile_img` VARCHAR (1024) DEFAULT NULL,
+	`birthday` datetime DEFAULT NULL,
 	`email` VARCHAR (1024) DEFAULT NULL,
 	`gender` VARCHAR (2) DEFAULT NULL,
 	`enable_status` INT (2) NOT NULL DEFAULT '0' COMMENT '0:禁止使用本商城，1：允许使用本商城',
