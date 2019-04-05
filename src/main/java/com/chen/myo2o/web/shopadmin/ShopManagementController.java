@@ -43,9 +43,9 @@ public class ShopManagementController {
     @RequestMapping(value = "/getshopinitinfo", method = RequestMethod.GET)
     @ResponseBody
     private Map<String, Object> getShopInitInfo() {
-        Map<String, Object> modelMap = new HashMap<String, Object>();
-        List<ShopCategory> shopCategoryList = new ArrayList<ShopCategory>();
-        List<Area> areaList = new ArrayList<Area>();
+        Map<String, Object> modelMap = new HashMap<>();
+        List<ShopCategory> shopCategoryList ;
+        List<Area> areaList ;
 
         try {
             shopCategoryList = shopCategoryService.getShopCategoryList(new ShopCategory());
@@ -135,7 +135,7 @@ public class ShopManagementController {
     @RequestMapping(value = "/getshopbyid",method = RequestMethod.GET)
     @ResponseBody
     private Map<String,Object> getShopById(HttpServletRequest request){
-        Map<String,Object> modelMap = new HashMap<String ,Object>();
+        Map<String,Object> modelMap = new HashMap<>();
         Long shopId = HttpServletRequestUtil.getLong(request,"shopId");
         if(shopId>-1){
             try {
@@ -168,7 +168,7 @@ public class ShopManagementController {
         }
         String shopStr = HttpServletRequestUtil.getString(request,"shopStr");
         ObjectMapper mapper = new ObjectMapper();
-        Shop shop = null;
+        Shop shop ;
         try {
             shop = mapper.readValue(shopStr,Shop.class);
         } catch (Exception e) {
