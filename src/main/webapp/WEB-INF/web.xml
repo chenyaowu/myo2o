@@ -7,6 +7,10 @@
     <welcome-file>index.html</welcome-file>
     <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>
+  <context-param>
+    <param-name>charset</param-name>
+    <param-value>UTF-8</param-value>
+  </context-param>
   <servlet>
     <servlet-name>Kaptcha</servlet-name>
     <servlet-class>com.google.code.kaptcha.servlet.KaptchaServlet</servlet-class>

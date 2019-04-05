@@ -14,13 +14,13 @@ public class ShopCategoryDaoTest extends BaseTest {
 
     @Test
     public void testQueryShopCategory(){
-      //  List<ShopCategory> shopCategoryList = shopCategoryDao.queryShopCategory(null);
-    //    assertEquals(1,shopCategoryList.size());
-        ShopCategory testCategory = new ShopCategory();
-        ShopCategory parentCategory = new ShopCategory();
-        parentCategory.setShopCategoryId(1l);
-        testCategory.setParent(parentCategory);
-        List<ShopCategory> shopCategoryList = shopCategoryDao.queryShopCategory(testCategory);
+        List<ShopCategory> shopCategoryList = shopCategoryDao.queryShopCategory(null);
         assertEquals(1,shopCategoryList.size());
+//        ShopCategory testCategory = new ShopCategory();
+//        ShopCategory parentCategory = new ShopCategory();
+//        parentCategory.setShopCategoryId(1l);
+//        testCategory.setParent(parentCategory);
+//        List<ShopCategory> shopCategoryList = shopCategoryDao.queryShopCategory(testCategory);
+//        assertEquals(1,shopCategoryList.size());
     }
 }

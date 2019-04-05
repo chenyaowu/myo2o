@@ -67,4 +67,8 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
             throw new ProductCategoryOperationException("deleteProductCategory error:"+e.getMessage());
         }
     }
+    @Override
+    public List<ProductCategory> getByShopId(long shopId) {
+        return productCategoryDao.queryProductCategoryList(shopId);
+    }
 }

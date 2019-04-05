@@ -96,6 +96,10 @@ public class ShopManagementController {
         if (shop != null && shopImg != null) {
             PersonInfo owner = (PersonInfo) request.getSession().getAttribute("user");
             //Session TODO
+            if(owner == null){
+                owner = new PersonInfo();
+                owner.setUserId(1l);
+            }
             shop.setOwner(owner);
             ShopExecution se;
             try {
