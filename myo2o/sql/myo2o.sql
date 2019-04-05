@@ -115,7 +115,7 @@ create TABLE tb_product_category(
 
 #创建商品表
 CREATE TABLE tb_product(
-	product_id int(100) NOT NULL,
+	product_id int(100) NOT NULL AUTO_INCREMENT,
 	product_name varchar(100) NOT NULL,
 	product_desc varchar(2000) DEFAULT NULL,
 	img_addr varchar(2000) DEFAULT '',
@@ -123,6 +123,7 @@ CREATE TABLE tb_product(
 	promotion_price varchar(100) DEFAULT NULL,
 	priority int(2) NOT NULL DEFAULT 0,
 	create_time datetime DEFAULT NULL,
+	last_edit_time datetime DEFAULT NULL,
 	enable_status int(2) NOT NULL DEFAULT 0,
 	product_category_id int(11) DEFAULT NULL,
 	shop_id int(20) NOT NULL DEFAULT 0,
@@ -140,7 +141,7 @@ create TABLE tb_product_img(
 	create_time datetime DEFAULT NULL,
 	product_id int(20) DEFAULT NULL,
 	PRIMARY KEY (product_img_id),
-	CONSTRAINT fk_proimg_product FOREIGN KEY (product_img_id) REFERENCES tb_product(product_id)
+	CONSTRAINT fk_proimg_product FOREIGN KEY (product_id) REFERENCES tb_product(product_id)
 )ENGINE=InnoDB AUTO_INCREMENT =1 DEFAULT CHARSET = utf8;
 
 

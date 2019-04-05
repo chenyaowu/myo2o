@@ -1,5 +1,6 @@
 package com.chen.myo2o.web.shopadmin;
 
+import com.chen.myo2o.dto.ImageHolder;
 import com.chen.myo2o.dto.ShopExecution;
 import com.chen.myo2o.entity.Area;
 import com.chen.myo2o.entity.PersonInfo;
@@ -98,7 +99,7 @@ public class ShopManagementController {
             shop.setOwner(owner);
             ShopExecution se;
             try {
-                se = shopService.addShop(shop, shopImg.getInputStream(), shopImg.getOriginalFilename());
+                se = shopService.addShop(shop,new ImageHolder(shopImg.getOriginalFilename(),shopImg.getInputStream()));
                 if (se.getState() == ShopStateEnum.CHECK.getState()) {
                     modelMap.put("success", true);
                     //该用户可以操作的店铺列表
@@ -183,9 +184,9 @@ public class ShopManagementController {
             ShopExecution shopExecution;
             try {
                 if(shopImg == null){
-                    shopExecution = shopService.modifyShop(shop,null,null);
+                    shopExecution = shopService.modifyShop(shop,null);
                 }else{
-                    shopExecution = shopService.modifyShop(shop,shopImg.getInputStream(),shopImg.getOriginalFilename());
+                    shopExecution = shopService.modifyShop(shop,new ImageHolder(shopImg.getOriginalFilename(),shopImg.getInputStream()));
                 }
                 if(shopExecution.getState() == ShopStateEnum.SUCCESS.getState()){
                     modelMapper.put("success",true);

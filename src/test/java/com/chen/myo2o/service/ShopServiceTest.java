@@ -1,6 +1,7 @@
 package com.chen.myo2o.service;
 
 import com.chen.myo2o.BaseTest;
+import com.chen.myo2o.dto.ImageHolder;
 import com.chen.myo2o.dto.ShopExecution;
 import com.chen.myo2o.entity.Area;
 import com.chen.myo2o.entity.PersonInfo;
@@ -44,7 +45,7 @@ public class ShopServiceTest extends BaseTest {
         shop.setAdvice("审核中");
         File shopImg = new File("E:\\image\\916492631372800465.jpg");
         InputStream is = new FileInputStream(shopImg);
-        ShopExecution se =  shopService.addShop(shop,is,shopImg.getName());
+        ShopExecution se =  shopService.addShop(shop,new ImageHolder(shopImg.getName(),is));
         assertEquals(ShopStateEnum.CHECK.getState(),se.getState());
     }
 
@@ -55,7 +56,7 @@ public class ShopServiceTest extends BaseTest {
         shop.setShopName("修改后的店铺名称");
         File shopImg = new File("e://AOF7.jpg");
         InputStream is = new FileInputStream(shopImg);
-        ShopExecution shopExecution = shopService.modifyShop(shop,is,"test.jpg");
+        ShopExecution shopExecution = shopService.modifyShop(shop,new ImageHolder("test.jpg",is));
         System.out.println(shopExecution.getShop().getShopImg());
     }
     @Test

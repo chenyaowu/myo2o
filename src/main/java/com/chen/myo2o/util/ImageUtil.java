@@ -1,7 +1,11 @@
 package com.chen.myo2o.util;
 
+import ch.qos.logback.core.util.FileUtil;
+import com.chen.myo2o.dto.ImageHolder;
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.geometry.Positions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.imageio.ImageIO;
@@ -16,16 +20,17 @@ import java.util.List;
 import java.util.Random;
 
 public class ImageUtil {
+	private static Logger logger = LoggerFactory.getLogger(ImageUtil.class);
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 	private static final Random r = new Random();
-	public static String generateThumbnail(InputStream thumbnailInputStream,String fileName, String targetAddr) {
+	public static String generateThumbnail(ImageHolder thumbnail, String targetAddr) {
 		String realFileName =getRandomFileName();
-		String extension = getFileExtension(fileName);
+		String extension = getFileExtension(thumbnail.getImageName());
 		makeDirPath(targetAddr);
 		String relativeAddr = targetAddr + realFileName + extension;
 		File dest = new File(PathUtil.getImgBasePath() + relativeAddr);
 		try {
-			Thumbnails.of(thumbnailInputStream).size(200, 200).outputQuality(0.25f).toFile(dest);
+			Thumbnails.of(thumbnail.getImage()).size(200, 200).outputQuality(0.25f).toFile(dest);
 		} catch (IOException e) {
 			throw new RuntimeException("创建缩略图失败：" + e.toString());
 		}
@@ -73,4 +78,27 @@ public class ImageUtil {
 			fileOrPath.delete();
 		}
 	}
+
+	public static String generateNormalImg(ImageHolder thumbnail, String targetAddr) {
+		// 获取不重复的随机名
+		String realFileName = getRandomFileName();
+		// 获取文件的拓展名
+		String extension = getFileExtension(thumbnail.getImageName());
+		//如果目标路径不存在，则自动创建
+		makeDirPath(targetAddr);
+		//获取文件存储的相对路径(带文件名)
+		String relativeAddr = targetAddr + realFileName + extension;
+		logger.debug("current relativeAddr is" + relativeAddr);
+		//获取文件要保存到的目标路径
+		File dest = new File(PathUtil.getImgBasePath() + relativeAddr);
+		logger.debug("current complete addr is :" + PathUtil.getImgBasePath() + relativeAddr);
+		//调用Thumbnails生成有水印的图片
+		try {
+			Thumbnails.of(thumbnail.getImage()).size(337, 640).outputQuality(0.5f).toFile(dest);
+		} catch (IOException e) {
+			throw new RuntimeException("创建缩略图失败：" + e.toString());
+		}
+		return relativeAddr;
+	}
+
 }
