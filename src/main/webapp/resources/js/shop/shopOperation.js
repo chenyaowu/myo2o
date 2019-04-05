@@ -3,7 +3,7 @@ $(function () {
     var isEdit = shopId ? true : false;
     var initUrl = '/myo2o/shopadmin/getshopinitinfo';
     var registerShopUrl = '/myo2o/shopadmin/registershop';
-    var shopInfoUrl = '/myo2o/shopadmin/getshopbyid?shopId='+shopId;
+    var shopInfoUrl = '/myo2o/shopadmin/getshopbyid?shopId=' + shopId;
     var editShopUrl = '/myo2o/shopadmin/modifyshop'
     if(!isEdit){
         getShopInitInfo();
@@ -18,18 +18,15 @@ $(function () {
                $('#shop-addr').val( shop.shopAddr);
                $('#shop-phone').val( shop.phone);
                $('#shop-desc').val(shop.shopDesc);
-               var shopCategory = '<option data-id="'
-                    +shop.shopCategory.shopCategoryId+'" select>'
-                    +shop.shopCategory.shopCategoryName+'</option>';
+               var shopCategory = '<option data-id="' + shop.shopCategory.shopCategoryId + '">' + shop.shopCategory.shopCategoryName + '</option>';
                var tempAreaHtml='';
-               data.areaList.map(function (item,index) {
-                   tempAreaHtml +='<option data-id =" '+item.areaId+'">'
-                                +item.areaName+'</option>';
+               data.areaList.map(function (item, index) {
+                   tempAreaHtml += '<option data-id = " ' + item.areaId + '">' + item.areaName + '</option>';
                });
                $('#shop-category').html(shopCategory);
-               $('#shop-category').attr('disabled','disabled');
+               $('#shop-category').attr('disabled', 'disabled');
                $('#area').html(tempAreaHtml);
-               $('#area option[data-id="+shop.area.areaId+"]').attr("selected","selected");
+               $('#area option[data-id="+shop.area.areaId+"]').attr("selected", "selected");
            }
         });
     }
@@ -39,12 +36,10 @@ $(function () {
                 var tempHtml = '';
                 var tempAreaHtml = '';
                 date.shopCategoryList.map(function (item, index) {
-                    tempHtml +='<option data-id="' + item.shopCategoryId + '">'
-                        + item.shopCategoryName + '</option>';
+                    tempHtml +='<option data-id="' + item.shopCategoryId + '">'+ item.shopCategoryName + '</option>';
                 });
                 date.areaList.map(function (item, index) {
-                    tempAreaHtml += '<option data-id="' + item.areaId + '">'
-                    + item.areaName + '</option>';
+                    tempAreaHtml += '<option data-id="' + item.areaId + '">' + item.areaName + '</option>';
                 });
                 $('#shop-category').html(tempHtml);
                 $('#area').html(tempAreaHtml);
@@ -82,11 +77,8 @@ $(function () {
         formData.append('verifyCodeActual', verifyCodeActual);
         $.ajax({
             url: (isEdit ? editShopUrl : registerShopUrl),
-            type: 'POST',
-            data: formData,
-            contentType: false,
-            processData: false,
-            cache: false,
+            type: 'POST', data: formData,
+            contentType: false, processData: false, cache: false,
             success: function (data) {
                 if(data.success){
                     $.toast('提交成功!');
