@@ -30,7 +30,7 @@ $(function () {
                    tempHtml += ''
                        + '<div class="row row-product">'
                             + '<div class="col-33">' + item.productName + '</div>'
-                            + '<div class="col-20">' + item.priority + '</div>'
+                            + '<div class="col-20">' + item.point + '</div>'
                             + '<div class="col-40">'
                                 + '<a href="#" class="edit" data-id=" ' + item.productId + '" data-status="' + item.enableStatus + '">编辑</a>'
                                 + '<a href="#" class="status" data-id=" ' + item.productId + '"data-status="' + contraryStatus + '">' + textOp + '</a>'

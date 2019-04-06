@@ -11,6 +11,9 @@ $(function () {
                 $('#product-time').text(
                     new Date(product.lastEditTime)
                         .Format("yyyy-MM-dd"));
+                if(product.point != undefined){
+                    $("#product-point").text('购买可得' + product.point + '积分');
+                }
                 $('#product-name').text(product.productName);
                 $('#product-desc').text(product.productDesc);
                 var imgListHtml = '';

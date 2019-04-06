@@ -27,6 +27,7 @@ $(function () {
                     $('#product-name').val(product.productName);
                     $('#product-desc').val(product.productDesc);
                     $('#priority').val(product.priority);
+                    $('#point').val(product.point);
                     $('#normal-price').val(product.normalPrice);
                     $('#promotion_price').val(product.promotionPrice);
                     //获取原本商品类别以及该店铺的所有商品列表
@@ -72,7 +73,7 @@ $(function () {
         product.productName = $('#product-name').val();
         product.productDesc = $('#product-desc').val();
         product.priority = $('#priority').val();
-        //product.point = $('#point').val();
+        product.point = $('#point').val();
         product.normalPrice = $('#normal-price').val();
         product.promotionPrice=$('#promotion_price').val();
         product.productCategory = {
