@@ -195,11 +195,9 @@ CREATE TABLE tb_user_product_map(
 	KEY `fk_user_product_map_profile` (`user_id`),
 	KEY `fk_user_product_map_product` (`product_id`),
 	KEY `fk_user_product_map_shop` (`shop_id`),
-	KEY `fk_user_product_map_operator` (`operator_id`),
 	CONSTRAINT fk_user_product_map_product FOREIGN KEY (product_id) REFERENCES tb_product (product_id),
 	CONSTRAINT fk_user_product_map_profile FOREIGN KEY (user_id) REFERENCES tb_person_info (user_id),
-  CONSTRAINT fk_user_product_map_shop FOREIGN KEY (shop_id) REFERENCES tb_shop (shop_id),
-  CONSTRAINT fk_user_product_map_operator FOREIGN KEY (operator_id) REFERENCES tb_person_info (user_id)
+  CONSTRAINT fk_user_product_map_shop FOREIGN KEY (shop_id) REFERENCES tb_shop (shop_id)
 )ENGINE=INNODB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8;
 
 #创建顾客店铺积分关系表

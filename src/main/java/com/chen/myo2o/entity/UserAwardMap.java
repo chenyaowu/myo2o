@@ -86,4 +86,6 @@ public class UserAwardMap {
 		this.shop = shop;
 	}
 
+
+
 }

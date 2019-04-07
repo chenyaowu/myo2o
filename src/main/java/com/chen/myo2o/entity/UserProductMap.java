@@ -5,7 +5,6 @@ import java.util.Date;
 //顾客消费商品映射
 public class UserProductMap {
 	private Long userProductId;
-
 	private Date createTime;
 	private Integer point;
 //	顾客信息
