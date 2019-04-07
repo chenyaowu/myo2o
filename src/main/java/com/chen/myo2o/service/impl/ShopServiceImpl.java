@@ -1,9 +1,11 @@
 package com.chen.myo2o.service.impl;
 
+import com.chen.myo2o.dao.ShopAuthMapDao;
 import com.chen.myo2o.dao.ShopDao;
 import com.chen.myo2o.dto.ImageHolder;
 import com.chen.myo2o.dto.ShopExecution;
 import com.chen.myo2o.entity.Shop;
+import com.chen.myo2o.entity.ShopAuthMap;
 import com.chen.myo2o.enums.ShopStateEnum;
 import com.chen.myo2o.exception.ShopOperationException;
 import com.chen.myo2o.service.ShopService;
@@ -14,8 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.File;
-import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 
@@ -23,6 +23,8 @@ import java.util.List;
 public class ShopServiceImpl implements ShopService {
     @Autowired
     private ShopDao shopDao;
+    @Autowired
+    private ShopAuthMapDao shopAuthMapDao;
 
     @Override
     @Transactional
@@ -53,6 +55,23 @@ public class ShopServiceImpl implements ShopService {
                     if (effectedNum <= 0) {
                         throw new ShopOperationException("更新图片地址失败");
                     }
+                    ShopAuthMap shopAuthMap = new ShopAuthMap();
+                    shopAuthMap.setEmployee(shop.getOwner());
+                    shopAuthMap.setShop(shop);
+                    shopAuthMap.setTitle("店家");
+                    shopAuthMap.setTitleFlag(0);
+                    shopAuthMap.setCreateTime(new Date());
+                    shopAuthMap.setLastEditTime(new Date());
+                    shopAuthMap.setEnableStatus(1);
+                    try {
+                        effectedNum = shopAuthMapDao.insertShopAuthMap(shopAuthMap);
+                        if(effectedNum<=0){
+                            throw new ShopOperationException("授权创建失败");
+                        }
+                    } catch (Exception e) {
+                       throw new ShopOperationException(e.getMessage());
+                    }
+
                 }
             }
 

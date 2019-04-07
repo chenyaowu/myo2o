@@ -21,6 +21,7 @@
 	</resultMap>
 	<select id="queryShopAuthMapListByShopId" resultMap="shopAuthResultMap">
 		SELECT
+		smap.shop_auth_id,
 		smap.title,
 		smap.title_flag,
 		smap.create_time,
@@ -59,6 +60,7 @@
 
 	<select id="queryShopAuthMapById" resultMap="shopAuthResultMap">
 		SELECT
+		smap.shop_auth_id,
 		smap.title,
 		smap.title_flag,
 		smap.create_time,

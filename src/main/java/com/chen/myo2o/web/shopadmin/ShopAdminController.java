@@ -37,5 +37,14 @@ public class ShopAdminController {
         return "shop/productmanagement";
     }
 
+    @RequestMapping(value = "/shopauthmanagement")
+    private String shopauthmanagement(){
+        return "shop/shopauthmanagement";
+    }
+
+    @RequestMapping(value = "/shopauthedit")
+    private String shopauthedit(){
+        return "shop/shopauthedit";
+    }
 
 }

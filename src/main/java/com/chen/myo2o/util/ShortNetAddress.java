@@ -1,0 +1,104 @@
+package com.chen.myo2o.util;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+public class ShortNetAddress {
+	private static Logger log = LoggerFactory.getLogger(ShortNetAddress.class);
+
+	public static int TIMEOUT = 30 * 1000;
+	public static String ENCODING = "UTF-8";
+
+	/**
+	 * JSON get value by key
+	 * 
+	 * @param replyText
+	 * @param key
+	 * @return
+	 */
+	private static String getValueByKey_JSON(String replyText, String key) {
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode node;
+		String tinyUrl = null;
+		try {
+			node = mapper.readTree(replyText);
+			tinyUrl = node.get(key).asText();
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			log.error("getValueByKey_JSON error:" + e.toString());
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			log.error("getValueByKey_JSON error:" + e.toString());
+		}
+
+		return tinyUrl;
+	}
+
+	/**
+	 * 通过HttpConnection 获取返回的字符串
+	 * 
+	 * @param connection
+	 * @return
+	 * @throws IOException
+	 */
+	private static String getResponseStr(HttpURLConnection connection)
+			throws IOException {
+		StringBuffer result = new StringBuffer();
+		int responseCode = connection.getResponseCode();
+
+		if (responseCode == HttpURLConnection.HTTP_OK) {
+			InputStream in = connection.getInputStream();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					in, ENCODING));
+			String inputLine = "";
+			while ((inputLine = reader.readLine()) != null) {
+				result.append(inputLine);
+			}
+		}
+		return String.valueOf(result);
+	}
+
+	public static String getShortURL(String originURL) {
+		String tinyUrl = null;
+		try {
+			URL url = new URL("http://suo.im/api.php?url=" + originURL);
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			connection.setRequestProperty("accept", "*/*");
+			connection.setRequestProperty("connection", "Keep-Alive");
+			connection.setRequestProperty("user-agent",
+					"Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
+			connection.connect();
+			String responseStr = getResponseStr(connection);
+			//log.info("tinyurl: " + responseStr);
+			connection.disconnect();
+			return responseStr;
+		} catch (IOException e) {
+			log.error("getshortURL error:" + e.toString());
+		}
+		return tinyUrl;
+
+	}
+
+	/**
+	 * ‘ 百度短链接接口 无法处理不知名网站，会安全识别报错
+	 * 
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		String tinyUrl = getShortURL("http%3a%2f%2fwww.baidu.com");
+		System.out.println(tinyUrl + "test");
+	}
+}
