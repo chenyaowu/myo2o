@@ -46,5 +46,8 @@ public class ShopAdminController {
     private String shopauthedit(){
         return "shop/shopauthedit";
     }
-
+    @RequestMapping(value = "/productbuycheck")
+    private String productBuyCheck(){
+        return "shop/productbuycheck";
+    }
 }
