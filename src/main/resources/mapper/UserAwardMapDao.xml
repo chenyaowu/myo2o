@@ -26,7 +26,7 @@
 		<association property="operator" column="operator_id"
 					 javaType="com.chen.myo2o.entity.PersonInfo">
 			<id column="user_id" property="userId" />
-			<result column="name" property="name" />
+			<result column="operator_name" property="name" />
 		</association>
 	</resultMap>
 	<select id="queryUserAwardMapList" resultMap="userAwardResultMap">
@@ -42,7 +42,7 @@
 		a.award_id,
 		a.award_name,
 		operator.user_id AS operator_id,
-		operator.name
+		operator.name AS operator_name
 		FROM
 		tb_user_award_map uam,
 		tb_person_info buyer,
@@ -130,7 +130,7 @@
 		a.award_id,
 		a.award_name,
 		operator.user_id AS operator_id,
-		operator.name
+		operator.name AS operator_name
 		FROM
 		tb_user_award_map uam,
 		tb_person_info buyer,
