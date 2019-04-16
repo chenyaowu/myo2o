@@ -5,6 +5,7 @@
 
 <mapper namespace="com.chen.myo2o.dao.ProductSellDailyDao">
     <resultMap id="productSellDailyResultMap" type="com.chen.myo2o.entity.ProductSellDaily">
+        <id column="product_sell_daily_id" property="productSellDailyId"></id>
         <result column="create_time" property="createTime"/>
         <result column="total" property="total"/>
         <association property="product" column="product_id" javaType="com.chen.myo2o.entity.Product">
@@ -18,7 +19,9 @@
     </resultMap>
     <select id="queryProductSellDailylList" resultMap="productSellDailyResultMap">
         SELECT
+        psd.product_sell_daily_id,
         psd.create_time,
+        psd.total,
         s.shop_id,
         s.shop_name,
         p.product_id,
@@ -38,25 +41,39 @@
                 and p.product_name like '%${productSellDailyCondition.product.productName}%'
             </if>
             <if test="beginTime != null and endTime != null" >
-                and psd.create_time BETWEEN #{beginTime} AND #{endTime};
+                and date_format(psd.create_time,'%Y-%m-%d') BETWEEN date_format(#{beginTime},'%Y-%m-%d') AND date_format(#{endTime},'%Y-%m-%d')
             </if>
             <if test="beginTime != null and endTime == null" >
-                and psd.create_time &gt;= #{beginTime};
+                and date_format(psd.create_time,'%Y-%m-%d') &gt;= date_format(#{beginTime},'%Y-%m-%d')
             </if>
             <if test="beginTime == null and endTime != null" >
-                and psd.end_time &lt;= #{endTime};
+                and date_format(psd.create_time,'%Y-%m-%d') &lt;= date_format(#{endTime},'%Y-%m-%d')
             </if>
         </where>
+        ORDER  BY psd.product_id,psd.create_time
     </select>
     <insert id="insertProductSellDaily" parameterType="com.chen.myo2o.entity.ProductSellDaily">
         INSERT
         INTO
-        tb_product_sell_daily
+        tb_product_sell_daily(product_id,shop_id,date_format(create_time,'%Y-%m-%d'),total)
         (
-        SELECT product_id,shop_id,create_time,count(product_id) as total FROM
+        SELECT product_id,shop_id,date_format(create_time,'%Y-%m-%d'),count(product_id) as total FROM
         tb_user_product_map
         WHERE
         date_format(create_time,'%Y-%m-%d') = date_sub(curdate(),INTERVAL 1 day) GROUP BY product_id,shop_id,create_time
+        )
+    </insert>
+
+    <insert id="insertDefaultProductSellDaily" parameterType="com.chen.myo2o.entity.ProductSellDaily">
+        INSERT
+        INTO
+        tb_product_sell_daily(product_id,shop_id,create_time,total)
+        (
+        SELECT product_id,shop_id,date_sub(curdate(),INTERVAL 1 day),0 as total FROM
+        tb_product as p
+        WHERE
+        p.product_id not in(select product_id from tb_product_sell_daily where date_format(create_time,'%Y-%m-%d')
+        = date_sub(curdate(),INTERVAL 1 day))
         )
     </insert>
 

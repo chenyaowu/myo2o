@@ -22,6 +22,7 @@ public class ProductSellDailyServiceImpl implements ProductSellDailyService{
     public void dailyCalculate() {
         logger.info("Quartz Running...");
         productSellDailyDao.insertProductSellDaily();
+        productSellDailyDao.insertDefaultProductSellDaily();
     }
 
     @Override

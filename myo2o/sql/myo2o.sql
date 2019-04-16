@@ -216,10 +216,12 @@ CREATE TABLE tb_user_shop_map(
 
 #创建顾客单日消费商品表
 CREATE TABLE tb_product_sell_daily(
+	`product_sell_daily_id` int(100) NOT NULL AUTO_INCREMENT,
 	`product_id` int(100) NOT NULL,
 	`shop_id` int(10) NOT NULL ,
 	`create_time` datetime DEFAULT NULL,
 	`total` int(10) DEFAULT 0,
+	PRIMARY KEY (`product_sell_daily_id`),
 	KEY `fk_product_sell_daily_product` (`product_id`),
 	KEY `fk_product_sell_daily_shop` (`shop_id`),
   CONSTRAINT fk_product_sell_daily_product FOREIGN KEY (product_id) REFERENCES tb_product (product_id),

@@ -1,10 +1,13 @@
 package com.chen.myo2o.web.shopadmin;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.chen.myo2o.dto.EcharSeries;
+import com.chen.myo2o.dto.EcharXAxis;
+import com.chen.myo2o.entity.ProductSellDaily;
 import com.chen.myo2o.service.ProductSellDailyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -59,5 +62,81 @@ public class UserProductManagementController {
 		}
 		return modelMap;
 	}
+	@RequestMapping(value = "/listproductselldailyinfobyshop", method = RequestMethod.GET)
+	@ResponseBody
+	private Map<String, Object> listProductSellDailyInfobyShop(
+			HttpServletRequest request) {
+		Map<String, Object> modelMap = new HashMap<>();
+		Shop currentShop = (Shop) request.getSession().getAttribute("currentShop");
+		if(currentShop != null && currentShop.getShopId() != null){
+			ProductSellDaily productSellDailyCondition = new ProductSellDaily();
+			productSellDailyCondition.setShop(currentShop);
+			Calendar calendar = Calendar.getInstance();
+			// 获取昨天日期
+			calendar.add(Calendar.DATE,-1);
+			Date endTime = calendar.getTime();
+			//获取7天前日期
+			calendar.add(Calendar.DATE,-6);
+			Date beginTime = calendar.getTime();
+			// 根据传入的查询条件获取该店铺的商品销售情况
+			List<ProductSellDaily> productSellDailyList = productSellDailyService.listProductSellDaily(productSellDailyCondition,beginTime,endTime);
+			// 指定日期格式
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			// 商品名列表，保证唯一性
+			HashSet<String> legendData = new HashSet<>();
+			// x轴数据
+			HashSet<String> xData = new HashSet<>();
+			//定义series
+			List<EcharSeries> series = new ArrayList<>();
+			//日销量列表
+			List<Integer> totalList = new ArrayList<>();
+			//当前商品名，默认空
+			String currentProductName = "";
+			for (int i = 0; i < productSellDailyList.size(); i++) {
+				ProductSellDaily productSellDaily = productSellDailyList.get(i);
+				legendData.add(productSellDaily.getProduct().getProductName());
+				xData.add(sdf.format(productSellDaily.getCreateTime()));
+				if(!currentProductName.equals(productSellDaily.getProduct().getProductName()) && !currentProductName.isEmpty()){
+					//如果currentProductName不等于获取的商品名，或者已遍历到列表的末尾，且currentProductName
+					//不为空，则是遍历到下一个商品的日销量信息了，将前一轮遍历的信息放入series当中，
+					//包括了商品名以及与商品名对应的统计日期以及当日销量
+					EcharSeries es = new EcharSeries();
+					es.setName(currentProductName);
+					es.setData(totalList.subList(0,totalList.size()));
+					series.add(es);
+					//重置totalList
+					totalList = new ArrayList<>();
+					//变换下currentProductId为当前的ProductId
+					currentProductName = productSellDaily.getProduct().getProductName();
+					//继续添加新的值
+					totalList.add(productSellDaily.getTotal());
+				}else{
+					//如果还是当前的productId则继续添加的新值
+					totalList.add(productSellDaily.getTotal());
+					currentProductName = productSellDaily.getProduct().getProductName();
+				}
+				if(i == productSellDailyList.size()-1){
+					EcharSeries es = new EcharSeries();
+					es.setName(currentProductName);
+					es.setData(totalList.subList(0,totalList.size()));
+					series.add(es);
+				}
+			}
+			modelMap.put("series",series);
+			modelMap.put("legendData",legendData);
+			// 拼出xAxis
+			List<EcharXAxis> xAxis = new ArrayList<>();
+			EcharXAxis exa = new EcharXAxis();
+			exa.setData(xData);
+			xAxis.add(exa);
+			modelMap.put("xAxis",xAxis);
+			modelMap.put("success",true);
 
+		}else {
+			modelMap.put("success",false);
+			modelMap.put("errMsg","empty shopId");
+		}
+		return modelMap;
+
+	}
 }

@@ -24,7 +24,7 @@ public class ProductSellDailyDaoTest extends BaseTest {
 
     @Test
     public void testInsertProductSellDaily(){
-        int effectNum = productSellDailyDao.insertProductSellDaily();
+        int effectNum = productSellDailyDao.insertDefaultProductSellDaily();
         assertEquals(1,effectNum);
     }
 }

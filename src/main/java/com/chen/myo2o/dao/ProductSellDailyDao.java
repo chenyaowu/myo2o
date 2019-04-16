@@ -11,5 +11,7 @@ public interface ProductSellDailyDao {
 
     int insertProductSellDaily();
 
+    int insertDefaultProductSellDaily();
+
 
 }

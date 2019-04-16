@@ -2,6 +2,7 @@ $(function() {
     var shopId = 1;
     var productName = '';
     getList();
+    getProductSellDailyList();
     function getList() {
         var listUrl = '/myo2o/shop/listuserproductmapsbyshop?pageIndex=1&pageSize=9999&shopId=' + shopId + '&productName=' + productName;
         $.getJSON(listUrl, function (data) {
@@ -28,55 +29,60 @@ $(function() {
         getList();
     });
 
+    /**
+     * 获取7天的销量
+     */
+    function getProductSellDailyList(){
+        // 获取该店铺商品7天销量URL
+        var listProductSellDailyUrl = '/myo2o/shop/listproductselldailyinfobyshop';
+
+        $.getJSON(listProductSellDailyUrl, function(data){
+            if(data.success){
+                var myChar = echarts.init(document.getElementById('chart'));
+
+                //生成动态的Echart信息的部分
+                var option = generateStaticEchartPart();
+                //遍历销量统计列表，动态设定echarts的值
+                option.legend.data = data.legendData;
+                option.xAxis = data.xAxis;
+                option.series = data.series;
+                myChar.setOption(option);
+            }
+        });
+    }
+
+    /**
+     * 生成静态的Echart信息部分
+     */
+    function generateStaticEchartPart(){
+        var option={
+            // 提示框
+            tooltip:{
+                trigger: 'axis',
+                axisPointer :{ //坐标轴指示器，坐标轴触发有效
+                    type: 'shadow' //鼠标移动到轴的时候，显示阴影
+                }
+            },
+            // 图例，每个图表最多仅有一个图例
+            legend: {},
+            // 直角坐标系内绘图网格
+            grid:{
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+
+            },
+            // 直角坐标中横轴数组，数组中每一项代表一条横轴坐标
+            xAxis:[{}],
+            // 直角坐标系中纵轴数据，数组中每一项代表一条纵轴坐标轴
+            yAxis:[{type: 'value'}]
+        };
+        return option;
+
+
+
+    }
+
     getList();
-
-    var myChart = echarts.init(document.getElementById('chart'));
-
-    var option = {
-        tooltip : {
-            trigger: 'axis',
-            axisPointer : {            // 坐标轴指示器，坐标轴触发有效
-                type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-            }
-        },
-        legend: {
-            data:['避孕套','麻古','伟哥']
-        },
-        grid: {
-            left: '3%',
-            right: '4%',
-            bottom: '3%',
-            containLabel: true
-        },
-        xAxis : [
-            {
-                type : 'category',
-                data : ['周一','周二','周三','周四','周五','周六','周日']
-            }
-        ],
-        yAxis : [
-            {
-                type : 'value'
-            }
-        ],
-        series : [
-            {
-                name:'避孕套',
-                type:'bar',
-                data:[120, 132, 101, 134, 290, 230, 220]
-            },
-            {
-                name:'麻古',
-                type:'bar',
-                data:[60, 72, 71, 74, 190, 130, 110]
-            },
-            {
-                name:'伟哥',
-                type:'bar',
-                data:[62, 82, 91, 84, 109, 110, 120]
-            }
-        ]
-    };
-
-    myChart.setOption(option);
 });
