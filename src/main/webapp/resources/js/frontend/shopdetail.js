@@ -12,6 +12,8 @@ $(function() {
 
 	var searchDivUrl = '/myo2o/frontend/listshopdetailpageinfo?shopId=' + shopId;
 
+	$('#exchangelist').attr('href','/myo2o/frontend/awardlist?shopId=' + shopId);
+
 	function getSearchDivData() {
 		var url = searchDivUrl;
 		$.getJSON(url, function(data) {

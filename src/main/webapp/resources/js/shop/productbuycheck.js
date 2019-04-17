@@ -3,7 +3,6 @@ $(function() {
     var productName = '';
     getList();
     getProductSellDailyList();
-    $("#shopList").attr('href', '/myo2o/shopadmin/shopmanagement?shopId=' + shopId);
     function getList() {
         var listUrl = '/myo2o/shop/listuserproductmapsbyshop?pageIndex=1&pageSize=9999&shopId=' + shopId + '&productName=' + productName;
         $.getJSON(listUrl, function (data) {

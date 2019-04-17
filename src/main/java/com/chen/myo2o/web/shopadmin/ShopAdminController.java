@@ -50,4 +50,23 @@ public class ShopAdminController {
     private String productBuyCheck(){
         return "shop/productbuycheck";
     }
+
+    @RequestMapping(value = "/usershopcheck")
+    private String userShopCheck(){
+        return "shop/usershopcheck";
+    }
+
+    @RequestMapping(value = "/awarddelivercheck")
+    private String awardDeliverCheck(){
+        return "shop/awarddelivercheck";
+    }
+    @RequestMapping(value = "/awardmanagement")
+    private String awardManagement(){
+        return "shop/awardmanagement";
+    }
+
+    @RequestMapping(value = "/awardoperation")
+    private String awardOperation(){
+        return "shop/awardoperation";
+    }
 }
