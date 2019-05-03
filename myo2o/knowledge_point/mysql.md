@@ -31,5 +31,42 @@
   2. 从服务器(Slave)将Binary log拷贝到从服务器中继日志(Relay log)当中。(Slave开启I/O thread读取Binary log写入到Relay log)
   3. SQL thrad读取Relay log，写入Slave数据库
 
+## Linux卸载mysql
+
+1. 查看当前mysql安装情况
+
+   ```bash
+   rpm -qa|grep -i mysql
+   ```
+
+2. 删除安装的mysql(上一步展示的所有mysql)
+
+   ```bash
+   rpm -ev xxxxxxx  -nodeps
+   ```
+
+3. 查找mysql目录并删除
+
+   ```bash
+   find / -name mysql
+   
+   /var/lib/mysql
+   /var/lib/mysql/mysql
+   /usr/lib64/mysql
+   
+   rm -rf /var/lib/mysql
+   rm -rf /var/lib/mysql
+   rm -rf /usr/lib64/mysql
+   
+   ```
+
+4. 删除/etc/my.cnf
+
+   ```bash
+   rm -rf /etc/my.cnf
+   ```
+
+   
+
 
 
