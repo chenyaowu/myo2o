@@ -42,7 +42,7 @@
 2. 删除安装的mysql(上一步展示的所有mysql)
 
    ```bash
-   rpm -ev xxxxxxx  -nodeps
+   rpm -ev xxxxxxx  --nodeps
    ```
 
 3. 查找mysql目录并删除
